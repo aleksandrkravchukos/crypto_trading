@@ -18,7 +18,7 @@ services:
       COMPOSER_MEMORY_LIMIT: -1
       ENVIRONMENT: debug
       DB_HOST: db_trade
-      DB_DATABASE: trade
+      DB_DATABASE: db_trade
       DB_USERNAME: root
       DB_PASSWORD: test
     working_dir: /var/www/trading
@@ -31,7 +31,7 @@ services:
   #MySQL Service
   db:
     image: mysql:8.0
-    container_name: db_trading
+    container_name: db_trade
     restart: unless-stopped
     ports:
       - "3306:3306"
