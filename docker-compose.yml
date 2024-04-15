@@ -1,0 +1,59 @@
+version: '3'
+services:
+
+  #PHP Service
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: app_trading
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "8080:8080"
+      - "443:443"
+    privileged: true
+    user: root
+    environment:
+      COMPOSER_MEMORY_LIMIT: -1
+      ENVIRONMENT: debug
+      DB_HOST: db_trade
+      DB_DATABASE: trade
+      DB_USERNAME: root
+      DB_PASSWORD: test
+    working_dir: /var/www/trading
+    networks:
+      - app-network
+    volumes:
+      - .:/var/www/trading/
+      - .docker/app/data:/var/storage
+
+  #MySQL Service
+  db:
+    image: mysql:8.0
+    container_name: db_trading
+    restart: unless-stopped
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_DATABASE: trading
+      MYSQL_ROOT_PASSWORD: test
+    networks:
+      - app-network
+    volumes:
+      - .docker/mysql/data:/var/lib/mysql
+
+  adminer:
+    image: adminer
+    restart: always
+    environment:
+      ADMINER_DESIGN: haeckel
+    networks:
+      - app-network
+    ports:
+      - "8081:8080"
+
+#Docker Networks
+networks:
+  app-network:
+    driver: bridge
